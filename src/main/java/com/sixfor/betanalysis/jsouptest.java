@@ -1,5 +1,6 @@
 package com.sixfor.betanalysis;
 
+import com.sixfor.betanalysis.Proccess.TimerProccess;
 import com.sixfor.betanalysis.entity.OddInfo;
 import com.sixfor.betanalysis.entity.TeamInfo;
 import org.json.JSONObject;
@@ -27,6 +28,7 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
 import java.util.logging.Level;
 
 import javax.net.ssl.*;
@@ -59,6 +61,9 @@ public class jsouptest {
 
     static void WaitLoading(String url){
         try{
+
+            Timer timer=new Timer();
+
             String chrome_driver = "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chromedriver.exe";  //chromedriver的文件位置
             //url="https://fbw.l0079.vwfa888.com/(S(0we1c1l35o3nyo2goupupy2knex1rEgrskimNSK5T_kWfFLMhcQZZ))/Sports/?market=L&mode=m0";
             System.setProperty("webdriver.chrome.driver", chrome_driver);
@@ -118,7 +123,7 @@ public class jsouptest {
                     //WebElement webElement_temp=_webElement.findElement(By.xpath(".//div[@ class ='leagueName']"));//这个.很重要，不加的话从全部文档中查找
                     WebElement webElement_temp=GetWebElementFromElement(_webElement,"div","class ='leagueName'");
                     String raceName=_webElement.getAttribute("innerHTML");
-                    if(!raceName.contains("虚拟赛")){
+                    if(!raceName.contains("虚拟")){
                         webElementList_real.add(_webElement);
                     }
                 }catch (Exception ex){
@@ -126,21 +131,65 @@ public class jsouptest {
                 }
             }
 
+            timer.schedule(new TimerProccess(webElementList_real),0,2000);
+
+            /*for (WebElement _webElement:webElementList_real) {
+                List<TeamInfo> teamInfoList =new ArrayList<TeamInfo>();
+                List<WebElement> webElementList_teamdivs=_webElement.findElements(By.xpath(".//div[@ class ='team']/div/div[@ class ='text']/parent::div/parent::div/parent::div/parent::div/parent::div"));
+                TeamInfo teamInfo =new TeamInfo();
+                for (WebElement _webElement_teamdiv:webElementList_teamdivs) {
+
+                    List<WebElement> webElementList_teaminfos=_webElement_teamdiv.findElements(By.xpath(".//div[@ class ='team']/div/div[@ class ='text']"));
+
+                    int seq=0;
+                    for (WebElement _webElementList_teaminfo:webElementList_teaminfos) {
+                        String teamname =_webElementList_teaminfo.getAttribute("innerText");
+                        if(teamname.length()>0 && !teamname.contains("和局")){
+                            if(seq==0){
+                                teamInfo.setName1(teamname);
+                                seq++;
+                            }else{
+                                teamInfo.setName2(teamname);
+                                teamInfoList.add(teamInfo);
+                                seq=0;
+                            }
+                        }
+                    }
+
+                    List<WebElement> webElementList_subtxts=_webElement_teamdiv.findElements(By.xpath(".//div[@ class ='odds subtxt']/div[@ class ='betArea']/span[contains(@class,'txt')]/parent::div/parent::div"));
+                    for (WebElement _webElementList_subtxt:webElementList_subtxts) {
+                        List<WebElement> webElementList_betAreaList=_webElementList_subtxt.findElements(By.xpath(".//div[@ class ='betArea']"));
+                        OddInfo oddInfo=new OddInfo();
+                        for (WebElement _webElement_betArea:webElementList_betAreaList) {
+                            try{//betArea里面的有时候是没有元素的
+                                String oddtype=_webElement_betArea.findElement(By.xpath(".//span[@ class ='txt']")).getAttribute("innerText");
+                                String odd=_webElement_betArea.findElement(By.xpath(".//div[@ class ='oddsBet']")).getAttribute("innerText");
+                                if(oddtype.length()==0 || oddtype.contains("小")){ ;
+                                    oddInfo.setSmallodd(Double.parseDouble(odd));
+                                }else{
+                                    oddInfo.setOddtype(oddtype);
+                                    oddInfo.setBigodd(Double.parseDouble(odd));
+                                }
+
+                            }catch (Exception ex){
+
+                            }
+                        }
+                        if(oddInfo.getOddtype()!=null){
+                            teamInfo.getOddInfos().add(oddInfo);
+                        }
+                    }
+                }
+
+                teamInfoList.add(teamInfo);
+                System.out.println("teamInfo=" + teamInfo.toString());
 
 
+            }*/
 
-            List<TeamInfo> teamInfoList =new ArrayList<TeamInfo>();
+
+            /*List<TeamInfo> teamInfoList =new ArrayList<TeamInfo>();
             for (WebElement _webElement:webElementList_real) {
-/*                try{
-                    sleep(1000);
-                    webElement =GetWebElementFromElement(_webElement,"div","class ='multiOdds multiOdds--more-lines'");// _webElement.findElement(By.xpath(".//div[@ class ='multiOdds multiOdds--more-lines']"));
-                    webElement.click();
-                }catch (Exception ex){
-
-                }*/
-
-                //sleep(1000);
-
                 //开始分析球队名称
                 int seq=0;
                 List<WebElement> webElementList_teams=_webElement.findElements(By.xpath(".//div[@ class ='team']/div/div[@ class ='text']"));//GetWebElementsFromElement(_webElement,"div","class ='team'");//
@@ -157,8 +206,6 @@ public class jsouptest {
                             teamInfo.setName2(teamname);
                             teamInfoList.add(teamInfo);
                             seq=0;
-
-                            System.out.println("teamInfo=" + teamInfo.toString());
                         }
 
                     }
@@ -168,19 +215,19 @@ public class jsouptest {
 
 
                 //开始分析赔率
-                /*if(teamInfoList.size()==2){
+                if(teamInfo.getName1().length()>0 && teamInfo.getName2().length()>0){
+                    List<OddInfo> oddInfoList=new ArrayList<OddInfo>();
                     List<WebElement> webElementList_odds=GetWebElementsFromElement(_webElement,"div","class ='multiOdds'");//_webElement.findElements(By.xpath(".//div[@ class ='multiOdds']"));
                     for (WebElement _webElementList_odd:webElementList_odds) {
                         List<WebElement> webElementList_subtxts=GetWebElementsFromElement(_webElementList_odd,"div","class ='odds subtxt'");//_webElement.findElements(By.xpath(".//div[@ class ='odds subtxt']"));
-                        OddInfo oddInfo=new OddInfo();
                         for (WebElement _webElementList_subtxt:webElementList_subtxts) {
-                            List<WebElement> webElementList_betAreas=GetWebElementsFromElement(_webElementList_subtxt,"div","class ='betArea'");
-                            List<OddInfo> oddInfoList=new ArrayList<OddInfo>();
+                            List<WebElement> webElementList_betAreas=_webElementList_subtxt.findElements(By.xpath(".//div[@ class ='betArea']/span[contains(@class,'txt')]/parent::div"));//GetWebElementsFromElement(_webElementList_subtxt,"div","class ='betArea'");
+                            OddInfo oddInfo=new OddInfo();
                             for (WebElement _webElementList_betArea:webElementList_betAreas) {
                                 try{//betArea里面的有时候是没有元素的
                                     String oddtype=GetWebElementFromElement(_webElementList_betArea,"span","class ='txt'").getAttribute("innerText");
                                     String odd=GetWebElementFromElement(_webElementList_betArea,"div","class ='oddsBet'").getAttribute("innerText");
-                                    if(oddtype.length()>0 || oddtype.contains("小")){ ;
+                                    if(oddtype.length()==0 || oddtype.contains("小")){ ;
                                         oddInfo.setSmallodd(Double.parseDouble(odd));
                                     }else{
                                         oddInfo.setOddtype(oddtype);
@@ -190,13 +237,20 @@ public class jsouptest {
                                 }catch (Exception ex){
 
                                 }
-
                             }
+                            if(oddInfo.getOddtype()!=null){
+                                oddInfoList.add(oddInfo);
+                            }
+
                         }
                     }
-                }*/
+                    teamInfo.setOddInfos(oddInfoList);
+                    System.out.println("teamInfo=" + teamInfo.toString());
+                }
 
-            }
+
+
+            }*/
 
 
 
@@ -215,6 +269,9 @@ public class jsouptest {
 
 
     }
+
+
+
 
 
     private static WebElement GetWebElementFromElement(WebElement webElement,String eleType,String path){

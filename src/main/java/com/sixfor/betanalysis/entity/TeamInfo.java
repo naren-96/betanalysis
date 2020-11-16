@@ -4,33 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TeamInfo {
-    private String time="";//比赛进程
-    private String name1="";//名称
-    private String name2="";//名称
-    private List<OddInfo> oddInfos=new ArrayList<OddInfo>();
+    private String name="";//名称
+    private List<OddInfo> oddInfos;
 
-    public String getTime() {
-        return time;
+    public String getName() {
+        return name;
     }
 
-    public void setTime(String time) {
-        this.time = time;
-    }
-
-    public String getName1() {
-        return name1;
-    }
-
-    public void setName1(String name1) {
-        this.name1 = name1;
-    }
-
-    public String getName2() {
-        return name2;
-    }
-
-    public void setName2(String name2) {
-        this.name2 = name2;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public List<OddInfo> getOddInfos() {
@@ -41,13 +23,15 @@ public class TeamInfo {
         this.oddInfos = oddInfos;
     }
 
+    public TeamInfo(String name) {
+        this.name = name;
+        this.oddInfos=new ArrayList<OddInfo>();
+    }
 
     @Override
     public String toString() {
         return "TeamInfo{" +
-                "time='" + time + '\'' +
-                ", name1='" + name1 + '\'' +
-                ", name2='" + name2 + '\'' +
+                "name='" + name + '\'' +
                 ", oddInfos=" + oddInfos.toString() +
                 '}';
     }

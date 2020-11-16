@@ -2,8 +2,8 @@ package com.sixfor.betanalysis.entity;
 
 public class OddInfo {
     private String oddtype;
-    private double bigodd;
-    private double smallodd;
+    private double oddval;
+    private boolean big;
 
     public String getOddtype() {
         return oddtype;
@@ -13,28 +13,28 @@ public class OddInfo {
         this.oddtype = oddtype;
     }
 
-    public double getBigodd() {
-        return bigodd;
+    public double getOddval() {
+        return oddval;
     }
 
-    public void setBigodd(double bigodd) {
-        this.bigodd = bigodd;
+    public void setOddval(double oddval) {
+        this.oddval = oddval;
     }
 
-    public double getSmallodd() {
-        return smallodd;
+    public boolean getBig() {
+        return big;
     }
 
-    public void setSmallodd(double smallodd) {
-        this.smallodd = smallodd;
+    public void setBig(boolean big) {
+        this.big = big;
     }
 
     @Override
     public String toString() {
         return "OddInfo{" +
                 "oddtype='" + oddtype + '\'' +
-                ", bigodd=" + bigodd +
-                ", smallodd=" + smallodd +
+                ", oddval=" + oddval +
+                ", big=" + big +
                 '}';
     }
 }
