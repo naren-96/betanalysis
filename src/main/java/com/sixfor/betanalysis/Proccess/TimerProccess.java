@@ -5,8 +5,6 @@ import com.sixfor.betanalysis.entity.RaceInfo;
 import com.sixfor.betanalysis.entity.TeamInfo;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-
-import java.rmi.server.ExportException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimerTask;
@@ -93,31 +91,6 @@ public class TimerProccess extends TimerTask {
                             }
                         }
                     }
-
-
-                /*List<WebElement> webElementList_subtxts=_webElement_teamdiv.findElements(By.xpath(".//div[@ class ='odds subtxt']/div[@ class ='betArea']/span[contains(@class,'txt')]/parent::div/parent::div"));
-                for (WebElement _webElementList_subtxt:webElementList_subtxts) {
-                    List<WebElement> webElementList_betAreaList=_webElementList_subtxt.findElements(By.xpath(".//div[@ class ='betArea']"));
-                    OddInfo oddInfo=new OddInfo();
-                    for (WebElement _webElement_betArea:webElementList_betAreaList) {
-                        try{//betArea里面的有时候是没有元素的
-                            String oddtype=_webElement_betArea.findElement(By.xpath(".//span[@ class ='txt']")).getAttribute("innerText");
-                            String odd=_webElement_betArea.findElement(By.xpath(".//div[contains(@class,'oddsBet')]")).getAttribute("innerText");
-                            if(oddtype.length()==0 || oddtype.contains("小")){ ;
-                                oddInfo.setSmallodd(Double.parseDouble(odd));
-                            }else{
-                                oddInfo.setOddtype(oddtype);
-                                oddInfo.setBigodd(Double.parseDouble(odd));
-                            }
-
-                        }catch (Exception ex){
-
-                        }
-                    }
-                    if(oddInfo.getOddtype()!=null){
-                        teamInfo.getOddInfos().add(oddInfo);
-                    }
-                }*/
                 }
 
                 System.out.println("raceInfo=" + raceInfo.toString());

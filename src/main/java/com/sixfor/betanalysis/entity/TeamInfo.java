@@ -32,6 +32,7 @@ public class TeamInfo {
     public String toString() {
         return "TeamInfo{" +
                 "name='" + name + '\'' +
+                ", oddInfosSize=" + oddInfos.size() +
                 ", oddInfos=" + oddInfos.toString() +
                 '}';
     }
